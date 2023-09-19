@@ -38,7 +38,6 @@ public class Visions
     public static final String MOD_ID = "visions";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
     public Visions()
     {
         // Register ourselves for server and other game events we are interested in
@@ -64,16 +63,8 @@ public class Visions
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-        if (event.getTabKey() != CreativeModeTabs.TOOLS_AND_UTILITIES) return;
-
-        event.accept(ModItems.VISION.get());
-        event.accept(ModItems.VISION_AIR.get());
-        event.accept(ModItems.VISION_FIRE.get());
-        event.accept(ModItems.VISION_WATER.get());
-        event.accept(ModItems.VISION_EARTH.get());
-        event.accept(ModItems.VISION_GRASS.get());
-        event.accept(ModItems.VISION_ELECTRIC.get());
-        event.accept(ModItems.VISION_ICE.get());
-        event.accept(ModItems.VISION_GHOST.get());
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            ModItems.VISIONS.forEach(vision -> event.accept(vision.get()));
+        }
     }
 }

@@ -7,6 +7,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Visions.MOD_ID);
 
@@ -20,6 +22,16 @@ public class ModItems {
     public static final RegistryObject<Item> VISION_ELECTRIC = ITEMS.register("vision_electric", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> VISION_ICE = ITEMS.register("vision_ice", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> VISION_GHOST = ITEMS.register("vision_ghost", () -> new Item(new Item.Properties()));
+    public static final List<RegistryObject<Item>> VISIONS = List.of(
+        VISION,
+        VISION_AIR,
+        VISION_FIRE,
+        VISION_WATER,
+        VISION_EARTH,
+        VISION_GRASS,
+        VISION_ELECTRIC,
+        VISION_ICE,
+        VISION_GHOST);
     //endregion Visions
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
