@@ -1,5 +1,7 @@
 package com.danho.visions;
 
+import com.danho.visions.item.ModCreativeModeTabs;
+import com.danho.visions.item.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -34,10 +37,18 @@ public class Visions
 {
     public static final String MOD_ID = "visions";
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
     public Visions()
     {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        var eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModItems.register(eventBus);
+        ModCreativeModeTabs.register(eventBus);
+
+        eventBus.addListener(this::addCreative);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -49,5 +60,20 @@ public class Visions
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+    private void addCreative(BuildCreativeModeTabContentsEvent event)
+    {
+        if (event.getTabKey() != CreativeModeTabs.TOOLS_AND_UTILITIES) return;
+
+        event.accept(ModItems.VISION.get());
+        event.accept(ModItems.VISION_AIR.get());
+        event.accept(ModItems.VISION_FIRE.get());
+        event.accept(ModItems.VISION_WATER.get());
+        event.accept(ModItems.VISION_EARTH.get());
+        event.accept(ModItems.VISION_GRASS.get());
+        event.accept(ModItems.VISION_ELECTRIC.get());
+        event.accept(ModItems.VISION_ICE.get());
+        event.accept(ModItems.VISION_GHOST.get());
     }
 }
