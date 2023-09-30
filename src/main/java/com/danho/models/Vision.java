@@ -38,7 +38,7 @@ public class Vision extends Item implements Equipable {
             return InteractionResultHolder.pass(player.getItemInHand(hand));
         }
 
-        ElementalVision.checkElementalCondition(level, player, hand);
+        ElementalVision.checkElementalCondition(new UseContext(level, player, hand));
 
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
