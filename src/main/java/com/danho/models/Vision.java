@@ -1,18 +1,14 @@
 package com.danho.models;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
-/*
- * https://www.youtube.com/watch?v=8ubLZbekPZw&ab_channel=ModdingbyKaupenjoe
- */
 public class Vision extends Item implements Equipable {
     public Vision(Properties properties) {
         super(properties);
@@ -35,15 +31,19 @@ public class Vision extends Item implements Equipable {
         return EquipmentSlot.LEGS;
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(
-            @NotNull Level level,
-            @NotNull Player player,
-            @NotNull InteractionHand interactionHand
-    ) {
-        var result = super.use(level, player, interactionHand);
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
+        Player player = context.getPlayer();
+        InteractionHand interactionHand = context.getHand();
+
+        if (super.useOn(context) == InteractionResult.FAIL
+        || player == null
+        || level.isClientSide()) {
+            return InteractionResult.PASS;
+        }
 
         ElementalVision.checkElementalCondition(level, player, interactionHand);
 
-        return result;
+        return InteractionResult.SUCCESS;
     }
 }
