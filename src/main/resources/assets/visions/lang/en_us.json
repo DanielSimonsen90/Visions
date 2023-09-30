@@ -1,0 +1,13 @@
+{
+  "item.visions.vision": "Vision",
+  "item.visions.vision_air": "Air Infused Vision",
+  "item.visions.vision_fire": "Fire Infused Vision",
+  "item.visions.vision_water": "Water Infused Vision",
+  "item.visions.vision_earth": "Earth Infused Vision",
+  "item.visions.vision_grass": "Grass Infused Vision",
+  "item.visions.vision_electric": "Electric Infused Vision",
+  "item.visions.vision_ice": "Ice Infused Vision",
+  "item.visions.vision_ghost": "Ghost Infused Vision",
+
+  "creativetab.visions_tab": "Visions"
+}
