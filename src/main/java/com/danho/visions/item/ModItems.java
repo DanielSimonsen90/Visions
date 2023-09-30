@@ -1,5 +1,6 @@
 package com.danho.visions.item;
 
+import com.danho.models.Vision;
 import com.danho.visions.Visions;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -13,7 +14,7 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Visions.MOD_ID);
 
     //region Visions
-    public static final RegistryObject<Item> VISION = ITEMS.register("vision", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> VISION = ITEMS.register("vision", () -> new Vision(new Item.Properties()));
     public static final RegistryObject<Item> VISION_AIR = ITEMS.register("vision_air", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> VISION_FIRE = ITEMS.register("vision_fire", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> VISION_WATER = ITEMS.register("vision_water", () -> new Item(new Item.Properties()));
