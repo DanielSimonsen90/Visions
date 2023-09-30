@@ -2,6 +2,7 @@ package com.danho.models;
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -31,19 +32,14 @@ public class Vision extends Item implements Equipable {
         return EquipmentSlot.LEGS;
     }
 
-    public @NotNull InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
-        InteractionHand interactionHand = context.getHand();
-
-        if (super.useOn(context) == InteractionResult.FAIL
-        || player == null
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+        if (super.use(level, player, hand).getResult() == InteractionResult.FAIL
         || level.isClientSide()) {
-            return InteractionResult.PASS;
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
         }
 
-        ElementalVision.checkElementalCondition(level, player, interactionHand);
+        ElementalVision.checkElementalCondition(level, player, hand);
 
-        return InteractionResult.SUCCESS;
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 }
