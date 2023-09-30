@@ -1,0 +1,4 @@
+Per "layer" of elemental shadowing:
+H: -7
+S: 0
+V: +7 (or keep 100)
