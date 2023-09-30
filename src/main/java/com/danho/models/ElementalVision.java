@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class ElementalVision extends Vision {
     //region statics
+    private static final PercentageRandomizer<VisionElementalTypes> randomizer = new PercentageRandomizer<>();
     public static void checkElementalCondition(UseContext context) {
         VisionElementalTypes type = getVisionElementalType(context);
         if (type == null) return;
@@ -30,16 +31,11 @@ public abstract class ElementalVision extends Vision {
     }
 
     private static @Nullable VisionElementalTypes getVisionElementalType(UseContext context) {
-        VisionElementalTypes type = checkAirCondition(context);
-        if (type != null) return type;
+        for (ElementalCheck check : ElementalChecks.checks) {
+            check.checkElementalType(context, randomizer);
+        }
 
-        type = checkFireCondition(context);
-        if (type != null) return type;
-
-        type = checkWaterCondition(context);
-        if (type != null) return type;
-
-        return null;
+        return randomizer.getRandom(true);
     }
     private static @Nullable ItemStack getVision(VisionElementalTypes type) {
         return switch (type) {
@@ -54,27 +50,6 @@ public abstract class ElementalVision extends Vision {
             default -> null;
         };
     }
-
-    //region checkElementCondition
-    private static @Nullable VisionElementalTypes checkAirCondition(UseContext context) {
-        return context.player.getY() >= 220 ? VisionElementalTypes.AIR : null;
-    }
-    private static @Nullable VisionElementalTypes checkFireCondition(UseContext context) {
-        Biome biome = context.level.getBiome(context.player.blockPosition()).get();
-        boolean isHot = biome.getBaseTemperature() >= 1.0F; // Savanna, Desert, Mesa, Nether
-
-        return isHot ? VisionElementalTypes.FIRE : null;
-    }
-
-    private static @Nullable VisionElementalTypes checkWaterCondition(UseContext context) {
-        Holder<Biome> biomeHolder = context.level.getBiome(context.player.blockPosition());
-        boolean isInWater = context.player.getFeetBlockState().is(Blocks.WATER);
-        boolean isInDeepOceanBiome = biomeHolder.is(BiomeTags.IS_DEEP_OCEAN);
-        boolean shouldFreeze = !biomeHolder.get().warmEnoughToRain(context.player.blockPosition());
-
-        return isInWater && isInDeepOceanBiome && !shouldFreeze ? VisionElementalTypes.WATER : null;
-    }
-    //endregion
 
     //endregion
 
