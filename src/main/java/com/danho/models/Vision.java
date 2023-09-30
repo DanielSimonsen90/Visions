@@ -6,7 +6,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +13,6 @@ public class Vision extends Item implements Equipable {
     public Vision(Properties properties) {
         super(properties);
     }
-
     public boolean isDamageable(ItemStack stack) {
         return true;
     }

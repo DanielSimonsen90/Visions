@@ -3,6 +3,7 @@ package com.danho.models;
 import com.danho.visions.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -10,14 +11,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ElementalVision extends Vision {
-    public ElementalVision(Properties properties) {
-        super(properties);
-    }
-
+    //region statics
     public static void checkElementalCondition(UseContext context) {
         VisionElementalTypes type = getVisionElementalType(context);
         if (type == null) return;
@@ -37,6 +36,9 @@ public abstract class ElementalVision extends Vision {
         type = checkFireCondition(context);
         if (type != null) return type;
 
+        type = checkWaterCondition(context);
+        if (type != null) return type;
+
         return null;
     }
     private static @Nullable ItemStack getVision(VisionElementalTypes type) {
@@ -52,6 +54,8 @@ public abstract class ElementalVision extends Vision {
             default -> null;
         };
     }
+
+    //region checkElementCondition
     private static @Nullable VisionElementalTypes checkAirCondition(UseContext context) {
         return context.player.getY() >= 220 ? VisionElementalTypes.AIR : null;
     }
@@ -60,6 +64,22 @@ public abstract class ElementalVision extends Vision {
         boolean isHot = biome.getBaseTemperature() >= 1.0F; // Savanna, Desert, Mesa, Nether
 
         return isHot ? VisionElementalTypes.FIRE : null;
+    }
+
+    private static @Nullable VisionElementalTypes checkWaterCondition(UseContext context) {
+        Holder<Biome> biomeHolder = context.level.getBiome(context.player.blockPosition());
+        boolean isInWater = context.player.getFeetBlockState().is(Blocks.WATER);
+        boolean isInDeepOceanBiome = biomeHolder.is(BiomeTags.IS_DEEP_OCEAN);
+        boolean shouldFreeze = !biomeHolder.get().warmEnoughToRain(context.player.blockPosition());
+
+        return isInWater && isInDeepOceanBiome && !shouldFreeze ? VisionElementalTypes.WATER : null;
+    }
+    //endregion
+
+    //endregion
+
+    public ElementalVision(Properties properties) {
+        super(properties);
     }
 
     public @NotNull InteractionResultHolder<ItemStack> use(
