@@ -26,6 +26,10 @@ public class Vision extends Item implements Equipable {
         return 100;
     }
 
+    public int getMaxStackSize(ItemStack stack) {
+        return 1;
+    }
+
     @Override
     public @NotNull EquipmentSlot getEquipmentSlot() {
         return EquipmentSlot.LEGS;
@@ -38,9 +42,7 @@ public class Vision extends Item implements Equipable {
     ) {
         var result = super.use(level, player, interactionHand);
 
-        player.getMainHandItem().hurtAndBreak(1, player, (p_220038_1_) -> {
-            p_220038_1_.broadcastBreakEvent(interactionHand);
-        });
+        ElementalVision.checkElementalCondition(level, player, interactionHand);
 
         return result;
     }
