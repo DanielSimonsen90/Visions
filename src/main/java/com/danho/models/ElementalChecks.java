@@ -14,6 +14,7 @@ public class ElementalChecks {
         ElementalChecks::checkEarthCondition,
         ElementalChecks::checkGrassCondition,
         ElementalChecks::checkElectricCondition,
+        ElementalChecks::checkIceCondition
     };
     private static void checkAirCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         if (context.player.getY() >= 220) randomizer.add(100, VisionElementalTypes.AIR);
@@ -53,5 +54,12 @@ public class ElementalChecks {
         boolean isThundering = context.level.isThundering();
 
         if (isThundering) randomizer.add(100, VisionElementalTypes.ELECTRIC);
+    }
+
+    private static void checkIceCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
+        Holder<Biome> biomeHolder = context.level.getBiome(context.player.blockPosition());
+        boolean isCold = biomeHolder.get().getBaseTemperature() <= 0.0F; // Snowy biomes
+
+        if (isCold) randomizer.add(100, VisionElementalTypes.ICE);
     }
 }
