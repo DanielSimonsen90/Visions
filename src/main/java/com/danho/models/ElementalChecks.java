@@ -63,3 +63,8 @@ public class ElementalChecks {
         if (isCold) randomizer.add(100, VisionElementalTypes.ICE);
     }
 }
+
+/*
+ * References:
+ *  - BIOME TEMPERATURES: https://www.minecraftforum.net/forums/minecraft-java-edition/discussion/2903986-biomes-temp
+ */
