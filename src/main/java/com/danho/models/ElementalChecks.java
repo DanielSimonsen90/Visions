@@ -14,7 +14,8 @@ public class ElementalChecks {
         ElementalChecks::checkEarthCondition,
         ElementalChecks::checkGrassCondition,
         ElementalChecks::checkElectricCondition,
-        ElementalChecks::checkIceCondition
+        ElementalChecks::checkIceCondition,
+        ElementalChecks::checkGhostCondition
     };
     private static void checkAirCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         if (context.player.getY() >= 220) randomizer.add(100, VisionElementalTypes.AIR);
@@ -61,6 +62,13 @@ public class ElementalChecks {
         boolean isCold = biomeHolder.get().getBaseTemperature() <= 0.0F; // Snowy biomes
 
         if (isCold) randomizer.add(100, VisionElementalTypes.ICE);
+    }
+
+    private static void checkGhostCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
+        Holder<Biome> biomeHolder = context.level.getBiome(context.player.blockPosition());
+        boolean isEnd = biomeHolder.getTagKeys().anyMatch(tag -> tag.toString().contains("is_end"));
+
+        if (isEnd) randomizer.add(100, VisionElementalTypes.GHOST);
     }
 }
 
