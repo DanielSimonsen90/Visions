@@ -12,7 +12,8 @@ public class ElementalChecks {
         ElementalChecks::checkFireCondition,
         ElementalChecks::checkWaterCondition,
         ElementalChecks::checkEarthCondition,
-        ElementalChecks::checkGrassCondition
+        ElementalChecks::checkGrassCondition,
+        ElementalChecks::checkElectricCondition,
     };
     private static void checkAirCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         if (context.player.getY() >= 220) randomizer.add(100, VisionElementalTypes.AIR);
@@ -46,5 +47,11 @@ public class ElementalChecks {
         boolean isDense = biomeHolder.getTagKeys().anyMatch(tag -> tag.toString().contains("is_dense"));
 
         if (isForest || isDense) randomizer.add(100, VisionElementalTypes.GRASS);
+    }
+
+    private static void checkElectricCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
+        boolean isThundering = context.level.isThundering();
+
+        if (isThundering) randomizer.add(100, VisionElementalTypes.ELECTRIC);
     }
 }
