@@ -20,6 +20,7 @@ public class ElementalChecks {
     private static void checkAirCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         if (context.player.getY() >= 220) randomizer.add(100, VisionElementalTypes.AIR);
     }
+
     private static void checkFireCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         Biome biome = context.level.getBiome(context.player.blockPosition()).get();
         boolean isHot = biome.getBaseTemperature() >= 1.0F; // Savanna, Desert, Mesa, Nether
