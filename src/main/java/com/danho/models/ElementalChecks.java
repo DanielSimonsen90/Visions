@@ -10,7 +10,8 @@ public class ElementalChecks {
     public static final ElementalCheck[] checks = new ElementalCheck[] {
         ElementalChecks::checkAirCondition,
         ElementalChecks::checkFireCondition,
-        ElementalChecks::checkWaterCondition
+        ElementalChecks::checkWaterCondition,
+        ElementalChecks::checkEarthCondition
     };
     private static void checkAirCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
         if (context.player.getY() >= 220) randomizer.add(100, VisionElementalTypes.AIR);
@@ -29,5 +30,12 @@ public class ElementalChecks {
         boolean shouldFreeze = !biomeHolder.get().warmEnoughToRain(context.player.blockPosition());
 
         if (isInWater && isInDeepOceanBiome && !shouldFreeze) randomizer.add(100, VisionElementalTypes.WATER);
+    }
+
+    private static void checkEarthCondition(UseContext context, PercentageRandomizer<VisionElementalTypes> randomizer) {
+        Holder<Biome> biomeHolder = context.level.getBiome(context.player.blockPosition());
+        boolean isInMountainBiome = biomeHolder.getTagKeys().anyMatch(tag -> tag.toString().contains("is_hill"));
+
+        if (isInMountainBiome) randomizer.add(100, VisionElementalTypes.EARTH);
     }
 }

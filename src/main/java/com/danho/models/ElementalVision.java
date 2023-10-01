@@ -20,7 +20,10 @@ public abstract class ElementalVision extends Vision {
     private static final PercentageRandomizer<VisionElementalTypes> randomizer = new PercentageRandomizer<>();
     public static void checkElementalCondition(UseContext context) {
         VisionElementalTypes type = getVisionElementalType(context);
-        if (type == null) return;
+        if (type == null) {
+            context.player.sendSystemMessage(Component.literal("You feel nothing in this area."));
+            return;
+        }
 
         ItemStack vision = getVision(type);
         if (vision == null) throw new NullPointerException("Vision is null");
