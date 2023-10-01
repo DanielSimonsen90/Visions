@@ -7,11 +7,6 @@ import java.util.*;
 
 public class PercentageRandomizer<TItem> {
     /**
-     * The number of times the randomizer should fail before returning default random item. (Not taking percentages into account)
-     */
-    private static final int FAIL_LIMIT = 3;
-
-    /**
      * The internal value of the randomizer.
      * The key is the percentage and the value a list of items, as there can be multiple items with the same percentage.
      */
@@ -41,44 +36,36 @@ public class PercentageRandomizer<TItem> {
      * @return A random item from {@link PercentageRandomizer#items}
      * @see PercentageRandomizer#calculateLuckyWheel()
      * @see PercentageRandomizer#getRandom(boolean)
-     * @see PercentageRandomizer#FAIL_LIMIT
      */
     public TItem getRandom() {
         // If there are no items, return null.
         if (items.isEmpty()) return null;
 
-        // Initialize the lucky wheel and fail count.
+        // Initialize the lucky wheel
         List<Pair<Integer, TItem>> luckyWheel = calculateLuckyWheel();
-        int failCount = 0;
 
-        // Loop until the fail count is greater than the fail limit.
-        while (failCount < FAIL_LIMIT) {
-            // Get a random value between 0 and 100.
-            double randomValue = random.nextDouble() * 100.0;
-            // Store the last percentage for range comparison.
-            int lastPercentage = 0;
+        // Get a random value between 0 and 100.
+        double randomValue = random.nextDouble() * 100.0;
+        // Store the last percentage for range comparison.
+        int lastPercentage = 0;
 
-            // Loop through the lucky wheel and get the items that correspond to the random value.
-            for (Pair<Integer, TItem> pair : luckyWheel) {
-                // Get the last range percentage and the current range percentage.
-                Integer percentage = pair.getA(); // Note pair.getA() and pair.getB() means pair.getKey() and pair.getValue()
+        // Loop through the lucky wheel and get the items that correspond to the random value.
+        for (Pair<Integer, TItem> pair : luckyWheel) {
+            // Get the last range percentage and the current range percentage.
+            Integer percentage = pair.getA(); // Note pair.getA() and pair.getB() means pair.getKey() and pair.getValue()
 
-                // If randomValue falls into the percentage range of "pair", return the item.
-                if (randomValue <= percentage
-                && randomValue > lastPercentage) {
-                    return pair.getB();
-                }
-
-                // Set the last percentage to the current percentage.
-                lastPercentage = percentage;
+            // If randomValue falls into the percentage range of "pair", return the item.
+            if (randomValue <= percentage
+            && randomValue > lastPercentage) {
+                return pair.getB();
             }
 
-            // If there are no selected items, increment the fail count and try again.
-            failCount++;
+            // Set the last percentage to the current percentage.
+            lastPercentage = percentage;
         }
 
-        // If algorithm fails more than FAIL_COUNT times, return a random item without taking percentages into account.
-        return luckyWheel.get(random.nextInt(luckyWheel.size())).getB();
+        // If algorithm fails, you got unlucky and will get nothing.
+        return null;
     }
 
     /**
