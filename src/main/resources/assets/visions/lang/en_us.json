@@ -9,5 +9,8 @@
   "item.visions.vision_ice": "Ice Infused Vision",
   "item.visions.vision_ghost": "Ghost Infused Vision",
 
-  "creativetab.visions_tab": "Visions"
+  "creativetab.visions_tab": "Visions",
+
+  "key.visions.category": "Visions",
+  "key.visions.ability": "Ability"
 }

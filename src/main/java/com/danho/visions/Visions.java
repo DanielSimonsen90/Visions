@@ -1,5 +1,6 @@
 package com.danho.visions;
 
+import com.danho.events.ClientEvents;
 import com.danho.visions.item.ModCreativeModeTabs;
 import com.danho.visions.item.ModItems;
 import com.mojang.logging.LogUtils;
@@ -33,6 +34,8 @@ public class Visions
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
