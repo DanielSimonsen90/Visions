@@ -1,21 +1,17 @@
 package com.danho.models;
 
 import com.danho.visions.item.ModItems;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class ElementalVision extends Vision {
+public class ElementalVision extends Vision {
     //region statics
     private static final PercentageRandomizer<VisionElementalTypes> randomizer = new PercentageRandomizer<>();
     public static void checkElementalCondition(UseContext context) {
@@ -56,8 +52,11 @@ public abstract class ElementalVision extends Vision {
 
     //endregion
 
-    public ElementalVision(Properties properties) {
+    public VisionElementalTypes type;
+
+    public ElementalVision(Properties properties, VisionElementalTypes type) {
         super(properties);
+        this.type = type;
     }
 
     public @NotNull InteractionResultHolder<ItemStack> use(

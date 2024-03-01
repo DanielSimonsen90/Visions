@@ -2,6 +2,7 @@ package com.danho.events;
 
 import com.danho.util.KeyBinding;
 import com.danho.visions.Visions;
+import com.danho.visions.abilities.AbilityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,6 +21,7 @@ public class ClientEvents {
                 // TODO: Do something when the ability key is pressed
                 assert Minecraft.getInstance().player != null;
                 Minecraft.getInstance().player.sendSystemMessage(Component.literal("Ability key pressed"));
+                AbilityHandler.INSTANCE.checkPassiveAbility();
             }
         }
     }
