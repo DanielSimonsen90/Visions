@@ -23,9 +23,31 @@ public class AirAbility extends BaseAbility {
         ServerPlayer player = getServerPlayer();
         if (player == null) return;
 
+        handleSprinting(player);
+        handleJumping(player);
+        handleFalling(player);
+        handleGliding(player);
+    }
+
+    private void handleSprinting(ServerPlayer player) {
         boolean isSprinting = player.isSprinting();
-        boolean isGlidingWithElytra = player.isFallFlying();
+
+        if (isSprinting) player.addEffect(new MobEffectInstance(
+          MobEffects.MOVEMENT_SPEED,
+          this.getTickDurationFromSeconds(MOVEMENT_SPEED_DURATION),
+          ABILITY_AMPLIFIER));
+    }
+
+    private void handleJumping(ServerPlayer player) {
         boolean isJumping = !player.onGround() && player.getDeltaMovement().y > 0;
+
+        if (isJumping) player.addEffect(new MobEffectInstance(
+          MobEffects.LEVITATION,
+          this.getTickDurationFromSeconds(LEVITATION_DURATION),
+          ABILITY_AMPLIFIER));
+    }
+
+    private void handleFalling(ServerPlayer player) {
         boolean isFalling = player.getY() - player.level().getHeightmapPos(
           Heightmap.Types.WORLD_SURFACE,
           new BlockPos(
@@ -34,20 +56,18 @@ public class AirAbility extends BaseAbility {
             (int) player.getZ())
         ).getY() > FALL_THRESHOLD;
 
-        // Handle mob effects per condition
-        if (isSprinting) player.addEffect(new MobEffectInstance(
-          MobEffects.MOVEMENT_SPEED,
-          this.getTickDurationFromSeconds(MOVEMENT_SPEED_DURATION),
-          ABILITY_AMPLIFIER));
-
-        if (isGlidingWithElytra || isJumping) player.addEffect(new MobEffectInstance(
-          MobEffects.LEVITATION,
-          this.getTickDurationFromSeconds(LEVITATION_DURATION),
-          ABILITY_AMPLIFIER));
-
         if (isFalling) player.addEffect(new MobEffectInstance(
           MobEffects.SLOW_FALLING,
           this.getTickDurationFromSeconds(SLOW_FALLING_DURATION),
+          ABILITY_AMPLIFIER));
+    }
+
+    private void handleGliding(ServerPlayer player) {
+        boolean isGlidingWithElytra = player.isFallFlying();
+
+        if (isGlidingWithElytra) player.addEffect(new MobEffectInstance(
+          MobEffects.LEVITATION,
+          this.getTickDurationFromSeconds(LEVITATION_DURATION),
           ABILITY_AMPLIFIER));
     }
 }
