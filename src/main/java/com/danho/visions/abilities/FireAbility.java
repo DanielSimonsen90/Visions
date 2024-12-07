@@ -12,8 +12,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.item.context.UseOnContext; // For ItemUseContext
@@ -24,6 +24,7 @@ public class FireAbility extends BaseAbility {
   public static final FireAbility INSTANCE = new FireAbility();
 
   private static final Item FUEL_ITEM = Items.COAL; // The fuel item to add to the furnace on passive use
+  private static final int FUEL_SLOT_INDEX = 1; // The index of the fuel slot in the furnace
 
   private FireAbility() { super(); }
 
@@ -42,16 +43,13 @@ public class FireAbility extends BaseAbility {
     // Check if the player is facing a fuelable utility block
     if (isFuelableBlock(level.getBlockState(targetPos))) {
       // If it's a fuelable block (like a furnace), try to add coal to the fuel slot
-      if (canAddFuelToFurnace(level, targetPos)) {
-        addFuelToFurnace(level, targetPos);
-      }
+      if (canAddFuelToFurnace(level, targetPos)) addFuelToFurnace(level, targetPos);
     } else {
       // If it's not a fuelable block, try to ignite the block
       igniteBlock(player, targetPos);
     }
   }
 
-  // Helper method to determine if the block is a fuelable utility block
   private boolean isFuelableBlock(BlockState blockState) {
     return (
       blockState.getBlock() instanceof FurnaceBlock
@@ -62,19 +60,23 @@ public class FireAbility extends BaseAbility {
 
   private boolean canAddFuelToFurnace(Level level, BlockPos furnacePos) {
     BlockState blockState = level.getBlockState(furnacePos);
-    if (blockState.getBlock() instanceof FurnaceBlock) {
-      FurnaceBlockEntity furnaceBlockEntity = (FurnaceBlockEntity) level.getBlockEntity(furnacePos);
-      // Check if the furnace has an empty fuel slot
-      return furnaceBlockEntity != null && furnaceBlockEntity.getItem(1).isEmpty();
+
+    // Ensure the block state is a fuelable block (Furnace, Blast Furnace, Smoker)
+    if (blockState.getBlock() instanceof AbstractFurnaceBlock
+      && level.getExistingBlockEntity(furnacePos) instanceof AbstractFurnaceBlockEntity furnaceBlockEntity
+    ) {
+      // Check if the furnace has an empty fuel slot.
+      // This also balances the "overpowered-ness" of the ability by requiring the furnace to have an empty fuel slot.
+      return furnaceBlockEntity.getItem(FUEL_SLOT_INDEX).isEmpty();
     }
-    return false;
+
+    return false; // Return false if block isn't fuelable or no fuel slot available
   }
 
   private void addFuelToFurnace(Level level, BlockPos furnacePos) {
-    BlockEntity blockEntity = level.getBlockEntity(furnacePos);
-    if (blockEntity instanceof FurnaceBlockEntity furnaceEntity) {
-      // Add coal to the furnace's fuel slot (index 1)
-      furnaceEntity.setItem(1, new ItemStack(FUEL_ITEM));
+    BlockEntity blockEntity = level.getExistingBlockEntity(furnacePos);
+    if (blockEntity instanceof AbstractFurnaceBlockEntity furnaceEntity) {
+      furnaceEntity.setItem(FUEL_SLOT_INDEX, new ItemStack(FUEL_ITEM));
       furnaceEntity.setChanged(); // Mark the furnace as modified
     }
   }
