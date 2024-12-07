@@ -33,6 +33,7 @@ public final class AbilityHandler {
 
         switch (vision.type) {
             case AIR -> AirAbility.INSTANCE.onPassiveUsed();
+            case FIRE -> FireAbility.INSTANCE.onPassiveUsed();
             default -> throw new IllegalStateException("Unexpected value: " + vision.type);
         }
     }
